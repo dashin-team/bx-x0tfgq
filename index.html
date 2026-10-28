@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#0f7c86">
+<title>登入</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Heiti TC",sans-serif;background:#eaf3f4;color:#16323d;-webkit-text-size-adjust:100%;min-height:100vh}
+[hidden]{display:none!important}
+button,input{font:inherit}
+/* ---- 登入 ---- */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+#login form{width:100%;max-width:340px;background:#fff;border-radius:20px;padding:26px 22px 22px;box-shadow:0 6px 24px rgba(15,124,134,.14)}
+#login label{display:block;font-size:13px;font-weight:700;color:#33525d;margin:0 0 6px}
+#login input{width:100%;height:46px;border:1.5px solid #cfe0e3;border-radius:12px;padding:0 14px;font-size:16px;margin-bottom:16px;background:#f9fcfc;color:#16323d;outline:none}
+#login input:focus{border-color:#1a9aa0;background:#fff;box-shadow:0 0 0 3px rgba(26,154,160,.15)}
+#login button{width:100%;height:48px;border:0;border-radius:12px;background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+#login button:disabled{opacity:.6;cursor:wait}
+#err{min-height:20px;margin:-4px 0 10px;color:#c9302c;font-size:13px;text-align:center}
+/* ---- 內容區 ---- */
+#bar{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-bottom:1px solid #d8e7e9;display:flex;align-items:center;gap:8px;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top))}
+#bar .t{flex:1;font-weight:900;font-size:15px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{border:0;border-radius:10px;height:36px;padding:0 14px;font-size:14px;font-weight:700;cursor:pointer;background:#e3f3f4;color:#0f7c86;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.btn.pri{background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff}
+.btn:disabled{opacity:.6;cursor:wait}
+#view{max-width:560px;margin:0 auto;padding:14px 10px 70px}
+#view h1{font-size:21px;margin:8px 4px 2px;font-weight:900}
+#view .sub{font-size:12.5px;color:#5b7480;margin:0 4px 14px}
+.mem{display:block;background:#fff;border-radius:18px;padding:14px 16px;margin-bottom:12px;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(15,124,134,.10);border:1.5px solid transparent}
+.mem:active,.mem:hover{border-color:#1a9aa0}
+.mem .r1{display:flex;align-items:center;gap:10px}
+.mem .av{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff;font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;flex:none}
+.mem .nm{font-weight:900;font-size:17px}.mem .ag{font-size:12px;color:#5b7480}
+.mem .go{margin-left:auto;color:#1a9aa0;font-size:22px}
+.mem .r2{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{font-size:11.5px;border-radius:10px;padding:2px 10px;background:#e3f3f4;color:#0f7c86;font-weight:700}
+.chip.low{background:#fde8e4;color:#c9302c}
+.dl{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:2px 4px 12px}
+.dl .who{font-size:12.5px;color:#5b7480}
+.dlbot{text-align:center;margin:6px 0 18px}
+#demotag{position:fixed;right:8px;bottom:6px;font-size:10px;color:#7d949c;background:rgba(255,255,255,.85);border:1px solid #cfe0e3;border-radius:8px;padding:0 6px;z-index:9;pointer-events:none}
+#msg{text-align:center;color:#5b7480;font-size:13px;padding:30px 0}
+@media(min-width:600px){#view{padding-top:22px}}
+
+.rpt,.rpt *{box-sizing:border-box}
+.rpt{font-family:"Noto Sans TC","Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Heiti TC",sans-serif;color:#16323d;line-height:1.5}
+.rpt .page{position:relative;background:#f4f9fa;padding:16px 14px 34px;margin:0 auto 14px;max-width:540px;border-radius:16px}
+.rpt .hdr{background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff;border-radius:18px;padding:18px 18px 16px;margin-bottom:14px}
+.rpt .brand{font-size:10px;letter-spacing:3px;opacity:.85;display:flex;justify-content:space-between;align-items:center}
+.rpt .demobadge{letter-spacing:1px;font-size:10px;border:1px solid rgba(255,255,255,.7);border-radius:8px;padding:0 7px}
+.rpt .title{font-size:26px;font-weight:900;margin:4px 0 12px;line-height:1.25}
+.rpt .meta{display:flex;gap:6px;font-size:11.5px}
+.rpt .meta div{background:rgba(255,255,255,.16);border-radius:10px;padding:5px 8px;flex:1;line-height:1.35;min-width:0}
+.rpt .meta span{display:block;font-size:9.5px;opacity:.85}
+.rpt .mini{display:flex;justify-content:space-between;font-size:10.5px;color:#5b7480;margin-bottom:10px;border-bottom:2px solid #1a9aa0;padding-bottom:6px;font-weight:700}
+.rpt .mini .mr{display:flex;gap:8px;align-items:center}
+.rpt .demo{font-weight:400;font-size:9px;color:#8aa0a8;border:1px solid #c5d6da;border-radius:6px;padding:0 5px}
+.rpt h2{font-size:17px;font-weight:900;margin:6px 0 8px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rpt h2:before{content:"";width:5px;height:18px;border-radius:3px;background:#1a9aa0;align-self:center}
+.rpt h2 small{font-size:10.5px;color:#5b7480;font-weight:400}
+.rpt .card{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 2px 8px rgba(15,124,134,.08);margin-bottom:12px}
+.rpt .stats{display:flex;gap:7px;margin-bottom:14px}
+.rpt .stats div{flex:1;min-width:0;background:#fff;border-radius:14px;padding:10px 2px;text-align:center;box-shadow:0 2px 8px rgba(15,124,134,.08)}
+.rpt .stats b{display:block;font-size:18px;color:#0f7c86;font-weight:900;line-height:1.3}
+.rpt .stats .alert b{color:#e8604c}
+.rpt .stats span{font-size:10.5px;color:#5b7480}
+.rpt .rate{padding:10px 0;border-bottom:1px dashed #e1ecee}.rpt .rate:last-child{border:none}
+.rpt .rtop{display:flex;align-items:center;gap:8px}
+.rpt .rname{font-weight:900;font-size:13.5px;width:74px;flex:none}
+.rpt .rval{flex:1;font-size:12px;color:#33525d;min-width:0}
+.rpt .pill{font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;color:#fff;flex:none}
+.rpt .ok{background:#22a06b}.rpt .mid{background:#f0a52b}.rpt .low{background:#e8604c}
+.rpt .bar{height:7px;background:#e9f1f2;border-radius:4px;margin:5px 0 3px}
+.rpt .fill{height:7px;border-radius:4px}
+.rpt .rnote{font-size:10.5px;color:#6c8590;line-height:1.5}
+.rpt .key{background:#fff4ee;border:1.5px solid #f4b3a3;border-radius:14px;padding:10px 14px;font-size:12.5px;line-height:1.7}
+.rpt .key b{color:#c9302c}.rpt .key .kt{font-weight:900;color:#b5412d;font-size:13.5px;margin-bottom:2px}
+.rpt .med .mt{font-weight:900;font-size:14.5px;padding-bottom:6px;border-bottom:1.5px solid #e1ecee;margin-bottom:4px}
+.rpt .msen{font-size:12px;color:#33525d;background:#f0f8f8;border-radius:10px;padding:6px 10px;margin:6px 0 4px;line-height:1.6}
+.rpt .msen b{color:#0f7c86}
+.rpt .mrow{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed #e8f0f1;font-size:12.5px}
+.rpt .mrow:last-child{border:none}.rpt .mrow b{text-align:right;font-weight:700}
+.rpt svg.tl{width:100%;height:auto;display:block}
+.rpt .legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.5px;color:#5b7480;margin-top:4px}
+.rpt .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px}
+.rpt .bars{display:flex;align-items:flex-end;gap:6px;padding-top:8px}
+.rpt .bc{flex:1;text-align:center;min-width:0}
+.rpt .bv{font-size:10.5px;font-weight:900;color:#0f7c86}
+.rpt .bb{background:#0f8a93;border-radius:5px 5px 0 0;margin:2px 3px 0}
+.rpt .bl{font-size:9.5px;color:#5b7480;margin:4px 0 6px;line-height:1.3}
+.rpt .scrollx{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.rpt table.pay{border-collapse:separate;border-spacing:0;width:100%;min-width:600px;font-size:10px;table-layout:fixed}
+.rpt .pay th{background:#0f7c86;color:#fff;font-weight:700;padding:6px 1px;text-align:center;font-size:10px}
+.rpt .pay th.n,.rpt .pay td.n{width:74px;text-align:left;padding-left:6px;position:sticky;left:0;z-index:1}
+.rpt .pay th.n{background:#0f7c86}.rpt .pay td.n{background:#fff;box-shadow:2px 0 3px rgba(15,124,134,.08)}
+.rpt .pay th.t,.rpt .pay td.t{width:54px}
+.rpt .pay td{border-bottom:1px solid #e6eff0;padding:4px 1px;text-align:center;height:36px;vertical-align:middle}
+.rpt .pay td.n{font-weight:700;font-size:10.5px;line-height:1.3}
+.rpt .pay td.n small{display:block;font-weight:400;color:#6c8590;font-size:9.5px}
+.rpt .pay td.on i{font-style:normal;display:block;background:#d8f0f1;color:#0a5f67;font-weight:700;border-radius:5px;padding:4px 0;font-size:9.5px;margin:0 1px}
+.rpt .pay td.t{font-weight:900;color:#0f7c86;text-align:right;padding-right:4px}
+.rpt .pay tr.sum td{background:#f0f8f8;font-weight:700;border-top:1.5px solid #1a9aa0}
+.rpt .pay tr.sum td.n{background:#f0f8f8}
+.rpt .swipe{font-size:10px;color:#8aa0a8;text-align:right;margin:0 0 4px}
+.rpt .paynote{margin:8px 0 4px;padding-left:16px;font-size:10px;color:#5b7480;line-height:1.6}
+.rpt .pol{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(15,124,134,.07)}
+.rpt .ptop{display:flex;align-items:center;gap:9px}
+.rpt .pno{width:24px;height:24px;border-radius:50%;background:#1a9aa0;color:#fff;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.rpt .pco{font-size:10px;color:#1f6fb2;font-weight:700}.rpt .pname{font-size:12.5px;font-weight:900;line-height:1.3}
+.rpt .ptop>div:nth-child(2){flex:1;min-width:0}
+.rpt .pprem{font-size:15px;font-weight:900;color:#0f7c86;white-space:nowrap;text-align:right}.rpt .pprem small{font-size:9.5px;font-weight:400}
+.rpt .pper{font-size:10px;color:#6c8590;margin:4px 0 4px 33px}
+.rpt .st{font-size:9.5px;font-weight:700;border-radius:8px;padding:0 7px;margin-left:4px}
+.rpt .st.ok{background:#e1f5ec;color:#177a52}.rpt .st.info{background:#e8f0fb;color:#2a62a8}
+.rpt .pmeta{display:flex;gap:6px;margin:2px 0 5px 33px}
+.rpt .pmeta div{flex:1;background:#f0f8f8;border-radius:8px;padding:3px 8px;font-size:10.5px;min-width:0}
+.rpt .pmeta span{display:block;font-size:9px;color:#6c8590}
+.rpt .pol ul{margin:2px 0 0 33px;padding-left:16px;font-size:11px;line-height:1.55;color:#33525d}
+.rpt .total{display:flex;justify-content:space-between;align-items:center;background:#e3f3f4;border-radius:12px;padding:10px 14px;font-size:12px}
+.rpt .total small{color:#6c8590;font-size:10px}.rpt .total b{font-size:17px;color:#0f7c86}
+.rpt .rec{display:flex;gap:10px;background:#fff;border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 2px 8px rgba(15,124,134,.07)}
+.rpt .rn{flex:none;width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.rpt .rt{font-weight:900;font-size:13.5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.rpt .tag{font-size:9.5px;font-weight:700;border-radius:8px;padding:1px 7px}
+.rpt .tag.hi{background:#fde8e4;color:#c9302c}.rpt .tag.mid{background:#fff1d6;color:#a86a00}.rpt .tag.ok{background:#e1f5ec;color:#177a52}
+.rpt .rd{font-size:11.5px;line-height:1.65;color:#33525d;margin-top:2px}.rpt .rd b{color:#0f7c86}
+.rpt .close{text-align:center;background:linear-gradient(135deg,#0f7c86,#1f6fb2);color:#fff;border-radius:16px;padding:14px 16px;font-size:12px;line-height:1.7;margin-top:4px}
+.rpt .close b{font-size:14.5px}
+.rpt .foot{text-align:center;font-size:9.5px;color:#8aa0a8;margin-top:12px}
+
+</style>
+</head>
+<body>
+<div id="login">
+ <form id="lf" autocomplete="on" novalidate>
+  <label for="u">帳號</label>
+  <input id="u" name="username" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required>
+  <label for="p">密碼</label>
+  <input id="p" name="password" type="password" autocomplete="current-password" required>
+  <div id="err" role="alert" aria-live="polite"></div>
+  <button id="go" type="submit">登入</button>
+ </form>
+</div>
+<div id="app" hidden>
+ <div id="bar"><a class="btn" id="back" href="#" hidden>‹ 返回</a><div class="t" id="bt"></div><button class="btn" id="out" type="button">登出</button></div>
+ <div id="view"></div>
+ <div id="demotag" hidden></div>
+</div>
+<script>
+(function(){
+"use strict";
+var ITER_MIN=600000;                    // 低於此次數的資料檔一律拒絕
+var enc=new TextEncoder(), dec=new TextDecoder();
+var state=null, cache={}, idleT=null;
+var $=function(id){return document.getElementById(id)};
+
+function b64(s){var b=atob(s),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}
+function hex(buf){return Array.prototype.map.call(new Uint8Array(buf),function(x){return('0'+x.toString(16)).slice(-2)}).join('')}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function norm(s){return String(s).normalize('NFKC')}
+
+async function getBin(url){
+  var r=await fetch(url,{cache:'no-cache',credentials:'omit'});
+  if(!r.ok) throw new Error('http '+r.status);
+  return new Uint8Array(await r.arrayBuffer());
+}
+async function lookupId(account){
+  var h=await crypto.subtle.digest('SHA-256',enc.encode('lk1|'+account));
+  return hex(h).slice(0,32);
+}
+async function deriveKey(account,password,salt,iter){
+  var base=await crypto.subtle.importKey('raw',enc.encode(account+'\n'+password),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',hash:'SHA-256',salt:salt,iterations:iter},base,{name:'AES-GCM',length:256},false,['decrypt']);
+}
+async function openVault(account,password){
+  var bin=await getBin('v/'+await lookupId(account)+'.bin');
+  if(bin[0]!==0x56||bin[1]!==0x31) throw new Error('fmt');
+  var iter=(bin[2]<<24|bin[3]<<16|bin[4]<<8|bin[5])>>>0;
+  if(iter<ITER_MIN) throw new Error('iter');
+  var salt=bin.slice(6,22), iv=bin.slice(22,34), ct=bin.slice(34), aad=bin.slice(0,22);
+  var key=await deriveKey(account,password,salt,iter);
+  var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv,additionalData:aad},key,ct);
+  return JSON.parse(dec.decode(pt));
+}
+async function openFile(id,keyB64){
+  var bin=await getBin('d/'+id+'.bin');
+  var key=await crypto.subtle.importKey('raw',b64(keyB64),'AES-GCM',false,['decrypt']);
+  return crypto.subtle.decrypt({name:'AES-GCM',iv:bin.slice(0,12)},key,bin.slice(12));
+}
+
+/* ---- 登入／登出 ---- */
+$('lf').addEventListener('submit',async function(ev){
+  ev.preventDefault();
+  var acc=norm($('u').value).trim(), pw=norm($('p').value);
+  var btn=$('go'), err=$('err'); err.textContent='';
+  if(!acc||!pw){err.textContent='帳號或密碼不正確';return}
+  btn.disabled=true; btn.textContent='驗證中…';
+  try{
+    state=await openVault(acc,pw);
+    $('p').value=''; $('u').value='';
+    $('login').hidden=true; $('app').hidden=false;
+    $('demotag').textContent=state.demo_label||''; $('demotag').hidden=!state.demo_label;
+    resetIdle(); route();
+  }catch(e){
+    state=null; err.textContent='帳號或密碼不正確'; $('p').value='';
+  }finally{btn.disabled=false;btn.textContent='登入'}
+});
+function logout(){
+  state=null; cache={}; clearTimeout(idleT);
+  $('view').innerHTML=''; $('app').hidden=true; $('login').hidden=false;
+  document.title='登入';
+  if(location.hash) history.replaceState(null,'',location.pathname+location.search);
+}
+$('out').addEventListener('click',logout);
+function resetIdle(){clearTimeout(idleT);idleT=setTimeout(logout,30*60*1000)}
+['click','keydown','touchstart'].forEach(function(n){document.addEventListener(n,function(){if(state)resetIdle()},{passive:true})});
+
+/* ---- 路由 ---- */
+window.addEventListener('hashchange',function(){if(state)route()});
+function route(){
+  var m=(location.hash||'').match(/^#\/([^\/]+)(?:\/(\d+))?$/);
+  if(!m||m[1]!==state.code){location.replace('#/'+state.code);return}
+  window.scrollTo(0,0);
+  if(m[2]) showReport(parseInt(m[2],10)); else showFamily();
+}
+function showFamily(){
+  document.title='保單健檢';
+  $('back').hidden=true; $('bt').textContent=state.title;
+  var h='<h1>'+esc(state.title)+'</h1><p class="sub">共 '+state.members.length+' 位成員，點選查看保單健檢報告</p>';
+  state.members.forEach(function(mb){
+    var chips='<span class="chip">'+mb.npol+' 張保單</span><span class="chip">年繳 '+mb.prem.toLocaleString('en-US')+' 元</span>';
+    (mb.lows||[]).forEach(function(x){chips+='<span class="chip low">'+esc(x)+' 建議補強</span>'});
+    h+='<a class="mem" href="#/'+esc(state.code)+'/'+mb.id+'"><div class="r1"><div class="av">'+esc(mb.name.slice(-1))+'</div><div><div class="nm">'+esc(mb.name)+'</div><div class="ag">'+esc(mb.age)+' 歲</div></div><div class="go">›</div></div><div class="r2">'+chips+'</div></a>';
+  });
+  $('view').innerHTML=h;
+}
+async function showReport(id){
+  var mb=state.members.filter(function(x){return x.id===id})[0];
+  if(!mb){location.replace('#/'+state.code);return}
+  $('back').hidden=false; $('back').href='#/'+state.code; $('bt').textContent=mb.name+' 保單健檢報告';
+  var v=$('view'); v.innerHTML='<div id="msg">資料解密中…</div>';
+  try{
+    if(!cache[id]) cache[id]=dec.decode(await openFile(mb.rf,mb.rk));
+    if(!state||location.hash!=='#/'+state.code+'/'+id) return;
+    v.innerHTML='<div class="dl"><span class="who">'+esc(mb.name)+'</span><button class="btn pri" type="button" id="dl1">下載 PDF</button></div>'+cache[id]+'<div class="dlbot"><button class="btn pri" type="button" id="dl2">下載 PDF</button></div>';
+    ['dl1','dl2'].forEach(function(b){$(b).addEventListener('click',function(){downloadPdf(mb,[$('dl1'),$('dl2')])})});
+  }catch(e){v.innerHTML='<div id="msg">資料讀取失敗，請重新整理後再登入。</div>'}
+}
+async function downloadPdf(mb,btns){
+  btns.forEach(function(b){b.disabled=true;b.textContent='準備中…'});
+  try{
+    var buf=await openFile(mb.pf,mb.pk);
+    var url=URL.createObjectURL(new Blob([buf],{type:'application/pdf'}));
+    var a=document.createElement('a'); a.href=url; a.download=mb.pn; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url)},30000);
+  }catch(e){alert('PDF 下載失敗，請稍後再試。')}
+  btns.forEach(function(b){b.disabled=false;b.textContent='下載 PDF'});
+}
+})();
+</script>
+</body>
+</html>
