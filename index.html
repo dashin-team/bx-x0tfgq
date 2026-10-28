@@ -193,6 +193,17 @@ async function openFile(id,keyB64){
   return crypto.subtle.decrypt({name:'AES-GCM',iv:bin.slice(0,12)},key,bin.slice(12));
 }
 
+/* 報告 HTML 先 gzip 再加密（rz=1）；解密後以瀏覽器內建 DecompressionStream 解開 */
+async function gunzip(buf){
+  var ds=new DecompressionStream('gzip');
+  var w=ds.writable.getWriter(); w.write(buf); w.close();
+  return new Response(ds.readable).arrayBuffer();
+}
+async function openReport(mb){
+  var buf=await openFile(mb.rf,mb.rk);
+  return dec.decode(mb.rz?await gunzip(buf):buf);
+}
+
 /* ---- 登入／登出 ---- */
 $('lf').addEventListener('submit',async function(ev){
   ev.preventDefault();
@@ -245,7 +256,7 @@ async function showReport(id){
   $('back').hidden=false; $('back').href='#/'+state.code; $('bt').textContent=mb.name+' 保單健檢報告';
   var v=$('view'); v.innerHTML='<div id="msg">資料解密中…</div>';
   try{
-    if(!cache[id]) cache[id]=dec.decode(await openFile(mb.rf,mb.rk));
+    if(!cache[id]) cache[id]=await openReport(mb);
     if(!state||location.hash!=='#/'+state.code+'/'+id) return;
     v.innerHTML='<div class="dl"><span class="who">'+esc(mb.name)+'</span><button class="btn pri" type="button" id="dl1">下載 PDF</button></div>'+cache[id]+'<div class="dlbot"><button class="btn pri" type="button" id="dl2">下載 PDF</button></div>';
     ['dl1','dl2'].forEach(function(b){$(b).addEventListener('click',function(){downloadPdf(mb,[$('dl1'),$('dl2')])})});
